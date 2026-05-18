@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -12,16 +13,33 @@ Route::get('/health', function () {
 });
 
 Route::get('/setup', function () {
+    $info = [
+        'db_connection' => env('DB_CONNECTION'),
+        'db_host' => env('DB_HOST'),
+        'db_port' => env('DB_PORT'),
+        'db_database' => env('DB_DATABASE'),
+        'db_username' => env('DB_USERNAME'),
+        'app_key' => env('APP_KEY') ? 'set' : 'missing',
+        'app_env' => env('APP_ENV'),
+        'app_debug' => env('APP_DEBUG'),
+    ];
+
     try {
+        DB::connection()->getPdo();
+        $info['db_connected'] = true;
+    } catch (\Exception $e) {
+        $info['db_connected'] = false;
+        $info['db_error'] = $e->getMessage();
+    }
+
+    if ($info['db_connected'] && request()->query('run') === 'true') {
         Artisan::call('migrate', ['--force' => true]);
         $migrateOutput = Artisan::output();
         Artisan::call('db:seed', ['--force' => true]);
         $seedOutput = Artisan::output();
-        return response()->json([
-            'migrate' => $migrateOutput,
-            'seed' => $seedOutput,
-        ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
+        $info['migrate'] = $migrateOutput;
+        $info['seed'] = $seedOutput;
     }
+
+    return response()->json($info);
 });
