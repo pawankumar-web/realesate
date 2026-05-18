@@ -35,16 +35,10 @@ Route::get('/setup', function () {
 
         if ($info['db_connected'] && request()->query('run') === 'true') {
             try {
-                Artisan::call('migrate', ['--force' => true]);
-                $info['migrate'] = Artisan::output();
+                Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
+                $info['output'] = Artisan::output();
             } catch (\Throwable $e) {
-                $info['migrate_error'] = $e->getMessage();
-            }
-            try {
-                Artisan::call('db:seed', ['--force' => true]);
-                $info['seed'] = Artisan::output();
-            } catch (\Throwable $e) {
-                $info['seed_error'] = $e->getMessage();
+                $info['error'] = $e->getMessage();
             }
         }
 
