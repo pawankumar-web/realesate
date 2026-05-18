@@ -33,12 +33,18 @@ Route::get('/setup', function () {
     }
 
     if ($info['db_connected'] && request()->query('run') === 'true') {
-        Artisan::call('migrate', ['--force' => true]);
-        $migrateOutput = Artisan::output();
-        Artisan::call('db:seed', ['--force' => true]);
-        $seedOutput = Artisan::output();
-        $info['migrate'] = $migrateOutput;
-        $info['seed'] = $seedOutput;
+        try {
+            Artisan::call('migrate', ['--force' => true]);
+            $info['migrate'] = Artisan::output();
+        } catch (\Exception $e) {
+            $info['migrate_error'] = $e->getMessage();
+        }
+        try {
+            Artisan::call('db:seed', ['--force' => true]);
+            $info['seed'] = Artisan::output();
+        } catch (\Exception $e) {
+            $info['seed_error'] = $e->getMessage();
+        }
     }
 
     return response()->json($info);
