@@ -17,8 +17,14 @@ WORKDIR /var/www/backend
 
 COPY backend /var/www/backend
 
-RUN chown -R www-data:www-data /var/www/backend/storage /var/www/backend/bootstrap/cache
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+RUN cp .env.example .env && \
+    php artisan key:generate --force && \
+    php artisan storage:link --force
+
+RUN chown -R www-data:www-data /var/www/backend/storage /var/www/backend/bootstrap/cache /var/www/backend/.env
 
 EXPOSE 8000
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD php artisan serve --host=0.0.0.0 --port=8000
