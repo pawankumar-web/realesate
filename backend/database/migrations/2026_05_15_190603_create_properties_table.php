@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('price', 15, 2);
             $table->decimal('discount_price', 15, 2)->nullable();
-            $table->enum('purpose', ['buy', 'rent']);
+            ``$table->string('purpose');
             $table->string('property_type');
             $table->string('bhk')->nullable();
             $table->decimal('area_sqft', 10, 2);
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('zip_code');
             $table->decimal('lat', 10, 7)->nullable();
             $table->decimal('lng', 10, 7)->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected', 'sold', 'rented'])->default('pending');
+            ``$table->string('status')->default('pending');
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_verified')->default(false);
             $table->bigInteger('views')->default(0);
@@ -54,3 +54,5 @@ return new class extends Migration
         Schema::dropIfExists('properties');
     }
 };
+
+

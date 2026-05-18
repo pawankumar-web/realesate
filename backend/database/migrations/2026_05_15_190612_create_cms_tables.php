@@ -11,14 +11,14 @@ return new class extends Migration
         Schema::create('blog_posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('author_id')->constrained('users')->cascadeOnDelete();
-            $table->string('title');
+            `$table->string('title');
             $table->string('slug')->unique();
             $table->text('content');
             $table->string('excerpt')->nullable();
             $table->string('featured_image')->nullable();
             $table->json('tags')->nullable();
             $table->json('meta_tags')->nullable();
-            $table->enum('status', ['draft', 'published'])->default('draft');
+            `$table->string('status')->default('draft');
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
@@ -67,3 +67,5 @@ return new class extends Migration
         Schema::dropIfExists('blog_posts');
     }
 };
+
+
