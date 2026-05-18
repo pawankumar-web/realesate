@@ -13,11 +13,11 @@ return new class extends Migration
             $table->foreignId('vendor_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('property_id')->nullable()->constrained()->nullOnDelete();
-            `$table->string('name');
+            $table->string('name');
             $table->string('email');
             $table->string('phone')->nullable();
             $table->text('message')->nullable();
-            `$table->string('status')->default('new');
+            $table->string('status')->default('new');
             $table->string('source')->nullable();
             $table->timestamps();
         });

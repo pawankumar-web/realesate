@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('property_id')->constrained()->cascadeOnDelete();
             $table->integer('rating')->unsigned();
             $table->text('review')->nullable();
-            ``$table->string('status')->default('pending');
+            $table->string('status')->default('pending');
             $table->timestamps();
             $table->unique(['user_id', 'property_id']);
         });

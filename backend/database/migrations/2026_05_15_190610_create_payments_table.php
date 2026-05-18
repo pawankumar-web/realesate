@@ -13,11 +13,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->nullableMorphs('payable');
             $table->decimal('amount', 15, 2);
-            `$table->string('currency')->default('INR');
+            $table->string('currency')->default('INR');
             $table->string('gateway');
             $table->string('gateway_transaction_id')->nullable()->unique();
             $table->string('gateway_order_id')->nullable();
-            `$table->string('status')->default('pending');
+            $table->string('status')->default('pending');
             $table->string('payment_type')->nullable();
             $table->json('metadata')->nullable();
             $table->timestamps();
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('duration')->comment('monthly, yearly, etc');
             $table->timestamp('starts_at');
             $table->timestamp('ends_at')->nullable();
-            ``$table->string('status')->default('active');
+            $table->string('status')->default('active');
             $table->timestamps();
         });
 

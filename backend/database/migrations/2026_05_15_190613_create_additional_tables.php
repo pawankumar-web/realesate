@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            `$table->string('code')->unique();
-            `$table->string('discount_type');
+            $table->string('code')->unique();
+            $table->string('discount_type');
             $table->decimal('discount_value', 15, 2);
             $table->decimal('min_order_amount', 15, 2)->nullable();
             $table->integer('max_uses')->nullable();
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('wallet_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 15, 2);
-            ``$table->string('type');
+            $table->string('type');
             $table->string('description')->nullable();
             $table->timestamps();
         });
