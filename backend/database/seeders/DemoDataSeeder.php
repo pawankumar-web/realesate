@@ -18,14 +18,23 @@ class DemoDataSeeder extends Seeder
 {
     public function run(): void
     {
-        \DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        $driver = \DB::getDriverName();
+        if ($driver === 'mysql') {
+            \DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        }
         \App\Models\PropertyImage::truncate();
         \App\Models\Review::truncate();
         \App\Models\Booking::truncate();
-        \DB::table('property_amenity')->truncate();
+        if ($driver === 'pgsql') {
+            \DB::statement('TRUNCATE TABLE property_amenity RESTART IDENTITY CASCADE');
+        } else {
+            \DB::table('property_amenity')->truncate();
+        }
         \App\Models\Property::truncate();
         \App\Models\BlogPost::truncate();
-        \DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        if ($driver === 'mysql') {
+            \DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        }
 
         $this->createVendors();
         $this->createProperties();
