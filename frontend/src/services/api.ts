@@ -1,6 +1,13 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1'
+const getBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL
+  return window.location.hostname.includes('vercel.app')
+    ? 'https://realesate-api.onrender.com/api/v1'
+    : '/api/v1'
+}
+
+const API_BASE_URL = getBaseUrl()
 
 const api = axios.create({
   baseURL: API_BASE_URL,
