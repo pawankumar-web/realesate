@@ -26,7 +26,7 @@ return new class extends Migration
             $table->integer('property_age')->nullable();
             $table->string('ownership_type')->nullable();
             $table->integer('floors')->nullable();
-            $table->boolean('parking')->default(false);
+            $table->integer('parking')->default(0);
             $table->boolean('balcony')->default(false);
             $table->string('address');
             $table->string('city');
