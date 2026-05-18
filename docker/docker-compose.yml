@@ -1,0 +1,73 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+    container_name: realesate-app
+    working_dir: /var/www/backend
+    volumes:
+      - ../backend:/var/www/backend
+      - ../frontend:/var/www/frontend
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=realesate
+      - DB_USERNAME=realesate
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - realesate
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: realesate-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    networks:
+      - realesate
+
+  mysql:
+    image: mysql:8.0
+    container_name: realesate-mysql
+    environment:
+      MYSQL_DATABASE: realesate
+      MYSQL_USER: realesate
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - realesate
+
+  redis:
+    image: redis:alpine
+    container_name: realesate-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - realesate
+
+volumes:
+  mysql_data:
+
+networks:
+  realesate:
+    driver: bridge
