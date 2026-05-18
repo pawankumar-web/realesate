@@ -13,14 +13,14 @@ COPY backend /var/www/backend
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 RUN cp .env.example .env && \
-    php artisan key:generate --force && \
-    php artisan storage:link --force
+    php artisan key:generate --force
 
 RUN chown -R www-data:www-data storage bootstrap/cache .env
 
-RUN printf '#!/bin/sh\nphp artisan serve --host=0.0.0.0 --port=${PORT:-8000}\n' > /start.sh && \
+RUN echo '#!/bin/sh' > /start.sh && \
+    echo 'php artisan serve --host=0.0.0.0 --port=${PORT:-8000}' >> /start.sh && \
     chmod +x /start.sh
 
 EXPOSE 8000
 
-CMD ["/start.sh"]
+CMD ["/bin/sh", "/start.sh"]
