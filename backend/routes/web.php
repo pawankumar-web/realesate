@@ -13,6 +13,9 @@ Route::get('/health', function () {
 });
 
 Route::get('/setup', function () {
+    if (app()->environment('production')) {
+        return response()->json(['error' => 'Not available in production'], 403);
+    }
     try {
         $info = [
             'db_connection' => env('DB_CONNECTION'),
